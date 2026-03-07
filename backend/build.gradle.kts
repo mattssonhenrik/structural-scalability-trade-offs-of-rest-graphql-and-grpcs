@@ -30,3 +30,7 @@ dependencies {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
+springBoot {
+    mainClass.set("se.lnu.Main")
+}

@@ -1,1 +1,1 @@
-rootProject.name = "api-experiment"
+rootProject.name = "api-structural-scalability"
