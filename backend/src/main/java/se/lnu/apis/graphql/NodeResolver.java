@@ -10,10 +10,9 @@ import se.lnu.data.Node;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
- * GraphQL resolver for the root node.
- * Loads children lazily and fields are stated by the query.
+ * Handles GraphQL requests for the tree data.
+ * Returns the root node and its children when requested.
  */
 @Controller
 public class NodeResolver {
@@ -22,9 +21,9 @@ public class NodeResolver {
     private DataStore dataStore;
 
     /**
-     * Entry point for all GraphQL queries.
+     * Returns the root node of the current dataset.
      *
-     * @return root NodeView, or null if dataset not loaded
+     * @return root node, or null if no dataset is loaded
      */
     @QueryMapping
     public NodeView root() {
@@ -34,11 +33,11 @@ public class NodeResolver {
         return new NodeView(root);
     }
 
-
     /**
-     * Resolves the children of a node from the data store.
-     * @param parent the parent node being resolved
-     * @return list of child NodeViews, empty list if leaf
+     * Returns the direct children of a node.
+     *
+     * @param parent the parent node
+     * @return list of child nodes, or an empty list if there are none
      */
     @SchemaMapping(typeName = "Node", field = "children")
     public List<NodeView> children(NodeView parent) {

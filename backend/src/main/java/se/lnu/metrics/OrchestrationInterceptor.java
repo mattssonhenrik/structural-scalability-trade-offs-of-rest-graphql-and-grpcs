@@ -25,10 +25,11 @@ public class OrchestrationInterceptor implements HandlerInterceptor {
 
     /**
      * Sets value of DP2 counter as a Header to be returned to testrunner.
+     * Must be postHandle — afterCompletion fires after response is committed.
      */
     @Override
-    public void afterCompletion(HttpServletRequest req, HttpServletResponse res,
-            Object handler, Exception ex) {
+    public void postHandle(HttpServletRequest req, HttpServletResponse res,
+            Object handler, org.springframework.web.servlet.ModelAndView mv) {
         res.setHeader("X-Orchestration-Count", String.valueOf(OrchestrationCounter.get()));
     }
 }

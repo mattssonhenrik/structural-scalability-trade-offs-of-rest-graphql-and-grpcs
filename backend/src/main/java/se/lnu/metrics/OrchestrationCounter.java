@@ -20,6 +20,7 @@ public class OrchestrationCounter {
      */
     public static void increment() {
         counter++;
+        
     } // called by DataStore.getNode/getChildren
 
     /**

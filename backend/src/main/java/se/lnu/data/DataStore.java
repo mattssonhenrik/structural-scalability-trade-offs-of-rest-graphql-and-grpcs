@@ -47,6 +47,7 @@ public class DataStore {
 
     /** @return root node of the current dataset */
     public Node getRoot() {
+        OrchestrationCounter.increment();
         return root;
     }
 

@@ -1,7 +1,7 @@
 package se.lnu;
 
 public class Main {
-	public static void main(String[] args) {
-		System.out.println("HELLO FROM RUNNER!!!!!");
+	public static void main(String[] args) throws Exception {
+		new se.lnu.runner.TestRunner().run();
 	}
 }

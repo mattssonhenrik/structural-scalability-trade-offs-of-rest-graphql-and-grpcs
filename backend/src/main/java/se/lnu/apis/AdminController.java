@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import se.lnu.data.DataStore;
 
 /**
- * Admin endpoint used by the test runner to reload the dataset before each test
- * case.
+ * Admin controller for reloading the dataset.
+ * Used before a test starts.
  *
  * POST /api/admin/reload?D=3&F=3&K=4&seed=42
  */
@@ -18,6 +18,16 @@ public class AdminController {
     @Autowired
     private DataStore dataStore;
 
+    /**
+     * Reloads the dataset with new values for depth, fan-out, field count, and
+     * seed.
+     *
+     * @param D    depth
+     * @param F    fan-out
+     * @param K    number of fields
+     * @param seed random seed
+     * @return confirmation message
+     */
     @PostMapping("/reload")
     public ResponseEntity<String> reload(
             @RequestParam int D,

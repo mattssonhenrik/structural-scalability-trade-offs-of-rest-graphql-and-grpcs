@@ -2,10 +2,10 @@ package se.lnu.apis.graphql;
 
 import se.lnu.data.Node;
 
-
 /**
- * Wrapper for Node.
- * Exposes k00-k09 as getters, beyond k09 will return null.
+ * Simple view of a Node for GraphQL.
+ * Provides access to id and fields k00-k09.
+ * Fields above k09 return null.
  */
 public class NodeView {
 

@@ -27,6 +27,13 @@ import java.util.*;
  * Total nodes ≈ (F^(D+1) - 1) / (F - 1)
  * Total fields ≈ nodes × K
  */
+
+
+// NY KOMMENTAR?
+/**
+ * Generates tree-shaped test data for the API experiment.
+ * The tree is based on depth, fan-out, field count, and seed.
+ */
 public class Datagenerator {
 
     private static int STRING_LENGTH = 16;
@@ -62,8 +69,9 @@ public class Datagenerator {
         return buildNode(0, new int[] { 0 });
     }
 
-    /** Prints a quick summary of expected node/field counts.
-     * For DEV
+    /**
+     * Prints a short summary of the generated dataset.
+     * Used for development only.
      */
     public void printStats() {
         int nodes = totalNodes(depth, fanOut);
@@ -75,10 +83,11 @@ public class Datagenerator {
     // ── private ───────────────────────────────────────────────────────────────
 
     /**
-     * Recursively builds one node.
+     * Builds one node and its children.
      *
-     * @param currentDepth current level in the tree (0 = root)
-     * @param counter      single-element array used as a shared mutable ID counter
+     * @param currentDepth current level in the tree
+     * @param counter shared counter for node ids
+     * @return generated node
      */
     private Node buildNode(int currentDepth, int[] counter) {
         String id = String.format("%06d", counter[0]++);
@@ -100,7 +109,7 @@ public class Datagenerator {
 
     /**
      * @param length number of characters to generate
-     * @return random string of the given length using characters from ALPHABET
+     * @return random string of the given length using characters from ALPHABET + 0-9
      */
     private String randomString(int length) {
         StringBuilder stringBuilder = new StringBuilder(length);
@@ -111,8 +120,8 @@ public class Datagenerator {
     }
 
     /**
-     * Helper for printing
-     * For DEV
+     * Calculates the total number of nodes.
+     * Used for development only.
      */
     private int totalNodes(int d, int f) {
         if (f == 1)

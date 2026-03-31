@@ -1,67 +1,88 @@
-# Datagenerator
+# Data — Datagenerator, Node, DataStore
 
-Generates controlled, nested JSON structures used as dataset for the API experiment.
+Paketet ansvarar för att generera och hålla det in-memory dataset som alla tre API-implementationer läser ifrån.
 
-## Parameters
+## Klasser
 
-| Parameter | Symbol | Description |
+| Klass | Ansvar |
+|---|---|
+| `Datagenerator` | Bygger trädstrukturen utifrån parametrarna D, F, K och seed |
+| `Node` | POJO: id, K fält (`k00`..`k99`), lista av barn |
+| `DataStore` | Spring-komponent som håller trädet i minnet och exponerar det till API-lagren |
+
+---
+
+## Datagenerator
+
+### Parametrar
+
+| Parameter | Symbol | Beskrivning |
 |-----------|--------|-------------|
-| `depth` | D | How many levels deep the tree goes |
-| `fanOut` | F | Number of child nodes per node |
-| `fieldCount` | K | Number of scalar fields per node |
-| `seed` | — | Random seed (`-1` = random each run, fixed value = reproducible) |
+| `depth` | D | Antal nivåer djupt trädet går |
+| `fanOut` | F | Antal barn per nod |
+| `fieldCount` | K | Antal skalärfält per nod |
+| `seed` | — | Fast seed (`42`) i experiment, `-1` för slumpmässig (manuell inspektion) |
 
-## Output structure
+### Fältformat
 
-Each node contains:
-- **K fields** with fixed-length keys (`f00`, `f01`, ...) and 16-character random string values
-- A `"children"` array with F child nodes (absent at leaf level)
+- Nycklar är alltid zero-paddade: `k00`, `k01`, ..., `k99` — alltid 3 bytes
+- Värden är alltid exakt 16 ASCII-tecken — alltid 16 bytes
+- Varje nod bidrar med exakt **K × 19 bytes** i fältdata oavsett D
 
-Example with D=2, F=2, K=2:
+### Storleksformler
+
+```
+Antal noder  = (F^(D+1) - 1) / (F - 1)   (F > 1)
+Antal fält   = antal noder × K
+```
+
+### Exempel D=2, F=2, K=2
+
 ```json
 {
-  "f00": "aBcDeFgHiJkLmNoP",
-  "f01": "qRsTuVwXyZ012345",
+  "id": "000000",
+  "k00": "aBcDeFgHiJkLmNoP",
+  "k01": "qRsTuVwXyZ012345",
   "children": [
-    {
-      "f00": "...",
-      "f01": "...",
-      "children": [ {"f00": "...", "f01": "..."}, {"f00": "...", "f01": "..."} ]
-    },
-    {
-      "f00": "...",
-      "f01": "...",
-      "children": [ {"f00": "...", "f01": "..."}, {"f00": "...", "f01": "..."} ]
-    }
+    { "id": "000001", "k00": "...", "k01": "...", "children": [...] },
+    { "id": "000002", "k00": "...", "k01": "...", "children": [...] }
   ]
 }
 ```
 
-## Payload predictability
+---
 
-Keys are zero-padded (`f00`, `f01`, ...) so key length is always exactly 3 bytes.
-Values are always 16 bytes.
+## Node
 
-Each node contributes exactly **K × 19 bytes** in field data, regardless of depth.
-This ensures fair payload (DP3) comparison when varying D.
+POJO som representerar en nod i trädet:
 
-## Size formulas
+- `id` — unik identifierare, zero-paddad sekventiell sträng, t.ex. `"000000"`, `"000001"` (alltid 6 tecken)
+- `fields` — `Map<String, String>` med K nyckel/värde-par
+- `children` — lista av F barn, tom lista i löv-noder
+
+---
+
+## DataStore
+
+Spring `@Component` — simulerar en databas. Håller trädet i en `HashMap` för O(1)-uppslagning per nod-id.
+
+### Metoder
+
+| Metod | DP2 | Beskrivning |
+|---|---|---|
+| `reload(D, F, K, seed)` | — | Regenererar datasetet, byggs om index |
+| `getRoot()` | nej | Returnerar rotnoden — räknas inte som orchestration |
+| `getNode(id)` | +1 | Slår upp en nod via id |
+| `getChildren(id)` | +1 | Returnerar direkta barn till en nod |
+
+### Reload-flöde
 
 ```
-Total nodes  ≈ (F^(D+1) - 1) / (F - 1)
-Total fields ≈ nodes × K
+POST /api/admin/reload?D=X&F=Y&K=Z&seed=42
+        ↓
+DataStore.reload(D, F, K, seed)
+  → Datagenerator.generate()   (bygger trädet)
+  → buildIndex(root)           (registrerar alla noder i HashMap)
 ```
 
-## Usage
-
-```java
-// Fixed seed — same output every run (use in actual experiments)
-Datagenerator gen = new Datagenerator(3, 2, 4, 42);
-
-// Random seed — different output each run (use for manual inspection)
-Datagenerator gen = new Datagenerator(3, 2, 4, -1);
-
-gen.printStats();          // prints node/field count summary
-String json = gen.generateJson();  // returns JSON string
-ObjectNode tree = gen.generate();  // returns Jackson object tree
-```
+Test-runnern anropar reload före varje testfall för att säkerställa att rätt dataset är laddat.
