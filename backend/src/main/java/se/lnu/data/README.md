@@ -71,7 +71,7 @@ Spring `@Component` — simulerar en databas. Håller trädet i en `HashMap` fö
 | Metod | DP2 | Beskrivning |
 |---|---|---|
 | `reload(D, F, K, seed)` | — | Regenererar datasetet, byggs om index |
-| `getRoot()` | nej | Returnerar rotnoden — räknas inte som orchestration |
+| `getRoot()` | +1 | Returnerar rotnoden — räknas som orchestration |
 | `getNode(id)` | +1 | Slår upp en nod via id |
 | `getChildren(id)` | +1 | Returnerar direkta barn till en nod |
 

@@ -3,6 +3,7 @@ package se.lnu.runner;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -20,16 +21,18 @@ public class MetricsAccumulator {
 
     /** DP3: Content-Length header, falls back to body byte count. */
     public static int contentLength(HttpResponse<String> resp) {
-        return (int) resp.headers().firstValueAsLong("content-length")
-                .orElse(resp.body().length());
+        return resp.body().length();
     }
 
-    /** DP2: X-Orchestration-Count header, 0 if absent. */
+    /** DP2: X-Orchestration-Count header, error if absent. */
     public static int orchestrationCount(HttpResponse<String> resp) {
         return resp.headers().firstValue("X-Orchestration-Count")
                 .map(Integer::parseInt)
-                .orElse(0);
+                .orElseThrow(() -> new IllegalStateException(
+                    "X-Orchestration-Count header missing — backend instrumentation did not run"));
     }
+
+    
 
     // ── REST ──────────────────────────────────────────────────────────────────
 

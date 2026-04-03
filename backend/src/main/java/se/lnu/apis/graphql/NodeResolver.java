@@ -27,7 +27,7 @@ public class NodeResolver {
      */
     @QueryMapping
     public NodeView root() {
-        var root = dataStore.getRoot();
+        Node root = dataStore.getRoot();
         if (root == null)
             return null;
         return new NodeView(root);

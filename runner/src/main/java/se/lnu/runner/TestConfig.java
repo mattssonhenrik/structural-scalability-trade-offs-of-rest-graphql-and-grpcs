@@ -15,7 +15,7 @@ public class TestConfig {
 
     public static int SWEEP_MIN = 0;
     // Careful rest over 10 can be exausting
-    public static int SWEEP_MAX = 10;
+    public static int SWEEP_MAX = 5;
 
     // Dataset is always generated with K_MAX fields, target K varies per test case
     public static int K_MAX = 10;
