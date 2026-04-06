@@ -17,7 +17,7 @@ from plotly.subplots import make_subplots
 # ── Konfiguration ─────────────────────────────────────────────────────────────
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-RESULTS_DIR  = os.path.join(PROJECT_ROOT, "runner", "results")
+RESULTS_DIR  = os.path.join(PROJECT_ROOT, "results")
 PLOTS_DIR    = os.path.join(RESULTS_DIR, "plots")
 CSV_PATTERN  = os.path.join(RESULTS_DIR, "rq1_*.csv")
 
@@ -79,6 +79,20 @@ def aggregate(df: pd.DataFrame, x_col: str) -> pd.DataFrame:
     )
 
 
+def validate_runs(df: pd.DataFrame, x_col: str, path: str):
+    """Kastar ValueError om något (paradigm, x)-par har olika värden mellan runs."""
+    ok = df[df["status"] == "ok"]
+    errors = []
+    for (paradigm, x), group in ok.groupby(["paradigm", x_col]):
+        for col, _ in METRICS:
+            if group[col].nunique() > 1:
+                errors.append(f"  {paradigm} {x_col}={x} '{col}': {group[col].tolist()}")
+    if errors:
+        raise ValueError(
+            f"Inkonsistenta runs i {os.path.basename(path)}:\n" + "\n".join(errors)
+        )
+
+
 # ── Plot-logik ────────────────────────────────────────────────────────────────
 
 def plot_csv(path: str) -> str:
@@ -86,6 +100,7 @@ def plot_csv(path: str) -> str:
     df = load_csv(path)
     x_col       = x_column(df)
     agg         = aggregate(df, x_col)
+    validate_runs(df, x_col, path)
     fixed       = fixed_params(df)
     series_name = df["series"].iloc[0]
     sweep_min   = int(df[x_col].min())

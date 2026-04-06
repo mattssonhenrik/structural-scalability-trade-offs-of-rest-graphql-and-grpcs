@@ -24,7 +24,7 @@ import java.util.Deque;
  * K-sweep (D=D_BASELINE, F=F_BASELINE).
  *
  * Before each test case the DataStore is reloaded via POST /api/admin/reload.
- * Results are written to CSV files in runner/results/.
+ * Results are written to CSV files in results/ (project root).
  *
  * TestRunner owns all orchestration: traversal loop, target-shape check,
  * metric accumulation, and RunResult assembly. Clients are atomic HTTP executors.
@@ -51,7 +51,7 @@ public class TestRunner {
      * file.
      */
     private void runSeries(String series, int dBase, int fBase, int kBase) throws IOException {
-        CsvWriter csv = new CsvWriter("results/csv/rq1_" + series + "_series_" + buildTag(series) + ".csv", series);
+        CsvWriter csv = new CsvWriter("../results/rq1_" + series + "_series_" + buildTag(series) + ".csv", series);
 
         for (int value = TestConfig.SWEEP_MIN; value <= TestConfig.SWEEP_MAX; value++) {
             int d = series.equals("D") ? value : dBase;

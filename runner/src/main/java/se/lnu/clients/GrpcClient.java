@@ -26,6 +26,7 @@ public class GrpcClient {
     public GrpcClient() {
         channel = ManagedChannelBuilder.forAddress("localhost", TestConfig.GRPC_PORT)
                 .usePlaintext()
+                .maxInboundMessageSize(1000 * 1024 * 1024)  // TODO: 1000 MB — default 4 MB är för litet för stora träd -1????
                 .build();
         stub = TreeServiceGrpc.newBlockingStub(channel);
     }
