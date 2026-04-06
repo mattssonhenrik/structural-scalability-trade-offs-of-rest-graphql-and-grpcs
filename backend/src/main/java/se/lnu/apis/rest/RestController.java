@@ -44,8 +44,7 @@ public class RestController {
      * @param id node id, for example 000001
      * @return list of child nodes, or an empty list if there are none
      */
-    // {id:.+} allows dots in the path variable (node IDs use dot-notation)
-    @GetMapping("/node/{id:.+}/children")
+    @GetMapping("/node/{id}/children")
     public ResponseEntity<List<Map<String, Object>>> getChildren(@PathVariable String id) {
         List<Map<String, Object>> response = new ArrayList<>();
         for (Node child : dataStore.getChildren(id)) {

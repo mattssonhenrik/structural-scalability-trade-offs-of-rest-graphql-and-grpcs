@@ -16,7 +16,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
  * Interceptor postHandle and Servlet filters are both too late for @RestController.
  */
 @ControllerAdvice
-public class OrchestrationHeaderAdvice implements ResponseBodyAdvice<Object> {
+public class OrchestrationRestInterceptor implements ResponseBodyAdvice<Object> {
 
     @Override
     public boolean supports(MethodParameter returnType,

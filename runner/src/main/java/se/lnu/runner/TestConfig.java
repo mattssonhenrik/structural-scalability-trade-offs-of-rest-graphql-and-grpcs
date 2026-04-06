@@ -23,7 +23,8 @@ public class TestConfig {
     public static int N_RUNS = 1;
     public static int SEED = 42;
 
-    public static String[] PARADIGMS = { "REST", "GraphQL" };
+    public static String[] PARADIGMS = { "REST", "GraphQL", "gRPC" };
 
     public static String BASE_URL = "http://localhost:8080";
+    public static int GRPC_PORT = 9090;
 }

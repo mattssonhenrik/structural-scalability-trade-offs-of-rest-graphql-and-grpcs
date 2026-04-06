@@ -36,8 +36,8 @@ import java.util.*;
  */
 public class Datagenerator {
 
-    private static int STRING_LENGTH = 16;
-    private static String ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private static final int STRING_LENGTH = 16;
+    private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
     private int depth;
     private int fanOut;
@@ -55,14 +55,14 @@ public class Datagenerator {
         this.depth = depth;
         this.fanOut = fanOut;
         this.fieldCount = fieldCount;
-        this.random = (seed < 0) ? new Random() : new Random(seed);
+        this.random = new Random(seed);
     }
 
     /**
      * Generates the full tree and returns the root node.
      * Node IDs are assigned sequentially in depth-first order: "000000", "000001",
      * 
-     *
+     * @param int[] instead of Int to access an object (through pointer) for shared state.
      * @return root Node of the generated tree
      */
     public Node generate() {
@@ -85,6 +85,7 @@ public class Datagenerator {
     /**
      * Builds one node and its children.
      *
+     * @param int[] instead of Int to access an object (through pointer) for shared state.
      * @param currentDepth current level in the tree
      * @param counter shared counter for node ids
      * @return generated node

@@ -2,6 +2,7 @@ package se.lnu.runner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import se.lnu.clients.GraphQLClient;
+import se.lnu.clients.GrpcClient;
 import se.lnu.clients.RestClient;
 import se.lnu.model.RunnerNode;
 import se.lnu.model.RunResult;
@@ -32,6 +33,7 @@ public class TestRunner {
 
     private final RestClient restClient = new RestClient();
     private final GraphQLClient graphQLClient = new GraphQLClient();
+    private final GrpcClient grpcClient = new GrpcClient();
     private final HttpClient http = HttpClient.newHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
 
@@ -82,6 +84,7 @@ public class TestRunner {
     private RunResult runSingle(String paradigm, TestCase testcase) {
         if (paradigm.equals("REST"))    return runRest(testcase);
         if (paradigm.equals("GraphQL")) return runGraphQL(testcase);
+        if (paradigm.equals("gRPC"))    return runGrpc(testcase);
         throw new IllegalArgumentException("Unknown paradigm: " + paradigm);
     }
 
@@ -169,6 +172,26 @@ public class TestRunner {
 
         } catch (Exception e) {
             return error(tescase, dp1, dp2, dp3, dp5, dp4);
+        }
+    }
+
+    /**
+     * gRPC run: single RPC call returns the full tree.
+     * DP1=1 always. DP2 and DP3 come from GrpcClient.GrpcResult.
+     * gRPC has no field selection → overfetch = (K_MAX - K) × nodeCount.
+     * gRPC fetches full tree in one call → underfetch = 0.
+     */
+    private RunResult runGrpc(TestCase tc) {
+        try {
+            GrpcClient.GrpcResult result = grpcClient.fetch(tc.getD());
+            int dp1 = 1;
+            int dp2 = result.dp2();
+            int dp3 = result.dp3();
+            int dp5 = MetricsAccumulator.overfetchRest(TestConfig.K_MAX, tc.getK(), tc.getD(), tc.getF());
+            int dp4 = 0;
+            return new RunResult(tc, dp1, dp2, dp3, dp5, dp4, "ok");
+        } catch (Exception e) {
+            return new RunResult(tc, 1, 0, 0, 0, 0, "error");
         }
     }
 

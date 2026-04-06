@@ -39,9 +39,9 @@ public class DataStore {
         index = new HashMap<>();
         Datagenerator datagenerator = new Datagenerator(d, f, k, seed);
         root = datagenerator.generate();
+        // TODO: RM later
         datagenerator.printStats();
         System.out.println("Reload has been invoked!!!!");
-        //root = new Datagenerator(d, f, k, seed).generate();
         buildIndex(root);
     }
 
@@ -51,14 +51,14 @@ public class DataStore {
         return root;
     }
 
-    /**
-     * @param id node identifier
-     * @return node with the given id, or null if not found
-     */
-    public Node getNode(String id) {
-        OrchestrationCounter.increment();
-        return index.get(id);
-    }
+    // /**
+    //  * @param id node identifier
+    //  * @return node with the given id, or null if not found
+    //  */
+    // public Node getNode(String id) {
+    //     OrchestrationCounter.increment();
+    //     return index.get(id);
+    // }
 
     /**
      * @param id node identifier

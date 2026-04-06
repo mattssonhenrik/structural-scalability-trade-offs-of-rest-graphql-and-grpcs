@@ -1,0 +1,125 @@
+syntax = "proto3";
+
+option java_package = "se.lnu.apis.grpc";
+option java_outer_classname = "TreeProto";
+option java_multiple_files = true;
+
+package tree;
+
+message Node {
+  string id = 1;
+  repeated Node children = 2;
+  string k00 = 3;
+  string k01 = 4;
+  string k02 = 5;
+  string k03 = 6;
+  string k04 = 7;
+  string k05 = 8;
+  string k06 = 9;
+  string k07 = 10;
+  string k08 = 11;
+  string k09 = 12;
+  string k10 = 13;
+  string k11 = 14;
+  string k12 = 15;
+  string k13 = 16;
+  string k14 = 17;
+  string k15 = 18;
+  string k16 = 19;
+  string k17 = 20;
+  string k18 = 21;
+  string k19 = 22;
+  string k20 = 23;
+  string k21 = 24;
+  string k22 = 25;
+  string k23 = 26;
+  string k24 = 27;
+  string k25 = 28;
+  string k26 = 29;
+  string k27 = 30;
+  string k28 = 31;
+  string k29 = 32;
+  string k30 = 33;
+  string k31 = 34;
+  string k32 = 35;
+  string k33 = 36;
+  string k34 = 37;
+  string k35 = 38;
+  string k36 = 39;
+  string k37 = 40;
+  string k38 = 41;
+  string k39 = 42;
+  string k40 = 43;
+  string k41 = 44;
+  string k42 = 45;
+  string k43 = 46;
+  string k44 = 47;
+  string k45 = 48;
+  string k46 = 49;
+  string k47 = 50;
+  string k48 = 51;
+  string k49 = 52;
+  string k50 = 53;
+  string k51 = 54;
+  string k52 = 55;
+  string k53 = 56;
+  string k54 = 57;
+  string k55 = 58;
+  string k56 = 59;
+  string k57 = 60;
+  string k58 = 61;
+  string k59 = 62;
+  string k60 = 63;
+  string k61 = 64;
+  string k62 = 65;
+  string k63 = 66;
+  string k64 = 67;
+  string k65 = 68;
+  string k66 = 69;
+  string k67 = 70;
+  string k68 = 71;
+  string k69 = 72;
+  string k70 = 73;
+  string k71 = 74;
+  string k72 = 75;
+  string k73 = 76;
+  string k74 = 77;
+  string k75 = 78;
+  string k76 = 79;
+  string k77 = 80;
+  string k78 = 81;
+  string k79 = 82;
+  string k80 = 83;
+  string k81 = 84;
+  string k82 = 85;
+  string k83 = 86;
+  string k84 = 87;
+  string k85 = 88;
+  string k86 = 89;
+  string k87 = 90;
+  string k88 = 91;
+  string k89 = 92;
+  string k90 = 93;
+  string k91 = 94;
+  string k92 = 95;
+  string k93 = 96;
+  string k94 = 97;
+  string k95 = 98;
+  string k96 = 99;
+  string k97 = 100;
+  string k98 = 101;
+  string k99 = 102;
+}
+
+message TreeRequest {
+  string root_id = 1;
+  int32 target_depth = 2;
+}
+
+message TreeResponse {
+  Node root = 1;
+}
+
+service TreeService {
+  rpc GetTree (TreeRequest) returns (TreeResponse);
+}
