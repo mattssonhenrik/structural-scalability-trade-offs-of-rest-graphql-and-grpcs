@@ -125,8 +125,11 @@ def plot_csv(path: str) -> str:
         for i, p in enumerate(paradigms_present)
     }
 
+    h_spacing = 0.06
+    subplot_w = (1.0 - (n_metrics - 1) * h_spacing) / n_metrics
+    subplot_centers = [i * (subplot_w + h_spacing) + subplot_w / 2 for i in range(n_metrics)]
+
     for col_idx, (col, _) in enumerate(METRICS, start=1):
-        show_legend = col_idx == 1  # visa legend bara i första subploten
         for paradigm in paradigms_present:
             sub = agg[agg["paradigm"] == paradigm].sort_values(x_col)
             x_vals = sub[x_col] + jitter_offsets[paradigm]
@@ -136,8 +139,8 @@ def plot_csv(path: str) -> str:
                     y=sub[col],
                     mode="lines+markers",
                     name=paradigm,
-                    legendgroup=paradigm,        # synkar legend-klick över subplots
-                    showlegend=show_legend,
+                    legendgroup=paradigm,
+                    showlegend=False,
                     line=dict(color=PARADIGM_COLORS[paradigm], width=2),
                     marker=dict(size=7),
                     hovertemplate=f"<b>{paradigm}</b><br>{x_col}=%{{x}}<br>värde=%{{y}}<extra></extra>",
@@ -147,11 +150,25 @@ def plot_csv(path: str) -> str:
         fig.update_xaxes(title_text=x_col, row=1, col=col_idx, dtick=1)
         fig.update_yaxes(title_text="Värde", row=1, col=col_idx)
 
+    legend_text = "  ".join(
+        f"<span style='color:{PARADIGM_COLORS[p]}'>● {p}</span>"
+        for p in paradigms_present
+    )
+    for cx in subplot_centers:
+        fig.add_annotation(
+            x=cx, y=1.25,
+            xref="paper", yref="paper",
+            text=legend_text,
+            showarrow=False,
+            xanchor="center", yanchor="top",
+            font=dict(size=11),
+        )
+
     fig.update_layout(
         title=dict(text=title, font=dict(size=16), x=0.5, y=0.98),
         height=520,
         margin=dict(t=110),
-        legend=dict(orientation="h", yanchor="top", y=1.25, xanchor="auto", x=0.5),
+        showlegend=False,
         plot_bgcolor="#fafafa",
         paper_bgcolor="#ffffff",
     )
