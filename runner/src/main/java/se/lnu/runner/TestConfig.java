@@ -9,9 +9,9 @@ package se.lnu.runner;
  */
 public class TestConfig {
 
-    public static int D_BASELINE = 7;
-    public static int F_BASELINE = 7;
-    public static int K_BASELINE = 7;
+    public static int D_BASELINE = 3;
+    public static int F_BASELINE = 3;
+    public static int K_BASELINE = 3;
     public static int S_BASELINE = 16;
 
     public static int SWEEP_MIN = 0;
@@ -22,9 +22,10 @@ public class TestConfig {
     public static int K_MAX = 7;
 
     // RQ2: explicit S values to sweep — add or remove values freely
-    public static int[] S_SWEEP_VALUES = { 5000, 10000, 20000, 50000, 100000 };
+    public static int[] S_SWEEP_VALUES = {4, 8, 16, 32, 64};
+    // {4, 8, 16, 32, 64, 128, 256, 512}
 
-    public static int N_RUNS = 2;
+    public static int N_RUNS = 1;
     public static int SEED = 42;
 
     public static String[] PARADIGMS = { "REST", "GraphQL", "gRPC" };

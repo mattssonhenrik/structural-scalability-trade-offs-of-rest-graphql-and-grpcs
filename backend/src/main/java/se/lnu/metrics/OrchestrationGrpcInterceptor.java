@@ -34,6 +34,7 @@ public class OrchestrationGrpcInterceptor implements ServerInterceptor {
             public void close(io.grpc.Status status, Metadata trailers) {
                 trailers.put(CM2_KEY, String.valueOf(OrchestrationCounter.get()));
                 super.close(status, trailers);
+                OrchestrationCounter.reset();
             }
         };
 
